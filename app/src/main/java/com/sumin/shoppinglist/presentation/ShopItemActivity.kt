@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
 import com.sumin.shoppinglist.R
 
-class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishListener {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = UNDEFINED_SCREEN_MODE
     private var shopItemId = UNDEFINED_ID
