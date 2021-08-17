@@ -29,14 +29,14 @@ class MainViewModel : ViewModel() {
     }
 
     //    fun getShopList() {
-//
-//        // Wrong: needs LiveData
-//        // LiveData: allows Activity to subscribe on data, e.g. LiveData<List<ShopItem<>>
-//        // return getShopListUseCase.getShopList()
-//        val list = getShopListUseCase.getShopList()
-//
-//        // setValue: требует вызова из main-потока
-//        // postValue: может быть вызван вне main, автоматически переключает на main
-//        shopList.postValue(list)
-//    }
+    //
+    //        // Wrong: needs LiveData
+    //        // LiveData: allows Activity to subscribe on data, e.g. LiveData<List<ShopItem<>>
+    //        // return getShopListUseCase.getShopList()
+    //        val list = getShopListUseCase.getShopList()
+    //
+    //        // setValue: требует вызова из main-потока
+    //        // postValue: может быть вызван вне main, автоматически переключает на main
+    //        shopList.postValue(list)
+    //    }
 }
