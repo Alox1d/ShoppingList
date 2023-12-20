@@ -1,4 +1,4 @@
-package com.sumin.shoppinglist.presentation
+package com.sumin.shoppinglist.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.sumin.shoppinglist.domain.ShopItem

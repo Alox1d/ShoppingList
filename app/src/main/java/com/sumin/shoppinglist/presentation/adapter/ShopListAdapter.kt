@@ -1,4 +1,4 @@
-package com.sumin.shoppinglist.presentation
+package com.sumin.shoppinglist.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
