@@ -1,13 +1,12 @@
 package com.sumin.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sumin.shoppinglist.R
-import com.sumin.shoppinglist.domain.ShopItem
 import com.sumin.shoppinglist.presentation.ShopListAdapter.Companion.MAX_POOL_SIZE
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +31,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             Log.i("TAG", "onCreate: $it")
 
-            shopListAdapter.shopList = it
+            /**
+             * Doing calculations in a worker thread, instead of main via DiffUtil.Callback(), when calling adapter.submitList(list).
+             */
+            shopListAdapter.submitList(it)
         }
 
     }
@@ -43,11 +45,11 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter = ShopListAdapter()
             adapter = shopListAdapter
             recycledViewPool.setMaxRecycledViews(
-                ShopListAdapter.ShopStatus.ACTIVE.value,
+                ShopStatus.ACTIVE.value,
                 MAX_POOL_SIZE
             )
             recycledViewPool.setMaxRecycledViews(
-                ShopListAdapter.ShopStatus.DISABLED.value,
+                ShopStatus.DISABLED.value,
                 MAX_POOL_SIZE
             )
         }
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = shopListAdapter.shopList[viewHolder.adapterPosition]
+                val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteShopItem(item)
             }
         }

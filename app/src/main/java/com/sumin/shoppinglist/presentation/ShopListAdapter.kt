@@ -1,23 +1,14 @@
 package com.sumin.shoppinglist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.sumin.shoppinglist.R
 import com.sumin.shoppinglist.domain.ShopItem
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
+class ShopListAdapter :
+    ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            val callback = ShopListDiffCallback(field, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
     var onShopItemLongClickListener: ((shopItem: ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((shopItem: ShopItem) -> Unit)? = null
 
@@ -37,7 +28,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
 
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
@@ -53,19 +44,19 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (shopList[position].enabled) ShopStatus.ACTIVE.value else ShopStatus.DISABLED.value
+        return if (getItem(position).enabled) ShopStatus.ACTIVE.value else ShopStatus.DISABLED.value
     }
 
-    override fun getItemCount(): Int = shopList.count()
-
-    class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvName: TextView = view.findViewById(R.id.tv_name)
-        val tvCount: TextView = view.findViewById(R.id.tv_count)
+    /* Used for RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>()
+    var shopList = listOf<ShopItem>()
+    set(value) {
+        val callback = ShopListDiffCallback(field, value)
+        val diffResult = DiffUtil.calculateDiff(callback)
+        diffResult.dispatchUpdatesTo(this)
+        field = value
     }
-
-    enum class ShopStatus(val value: Int) {
-        ACTIVE(0), DISABLED(1);
-    }
+    override fun getItemCount(): Int = itemCount
+     */
 
     companion object {
         // Из-за появления 2-го ViewType'а при большом кол-ве элементов (>100)
