@@ -1,11 +1,14 @@
 package com.sumin.shoppinglist.presentation
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sumin.shoppinglist.R
 import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter
 import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
@@ -39,6 +42,10 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.submitList(it)
         }
 
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            startActivity(ShopItemActivity.newIntentAddItem(this))
+        }
     }
 
     private fun setupRecyclerView() {
@@ -81,6 +88,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
             Log.i("TAG", "onShopItemClickListener: $it")
+
+            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
         }
     }
 

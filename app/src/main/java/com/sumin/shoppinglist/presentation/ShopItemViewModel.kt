@@ -67,6 +67,14 @@ class ShopItemViewModel : ViewModel() {
         }
     }
 
+    fun resetErrorInputName(){
+        _errorInputName.postValue(false)
+    }
+
+    fun resetErrorInputCount(){
+        _errorInputCount.postValue(false)
+    }
+
     private fun finishWork() {
         _shouldCloseScreen.postValue(Unit)
     }
@@ -77,7 +85,7 @@ class ShopItemViewModel : ViewModel() {
 
     private fun parseCount(inputCount: String?): Int {
         return inputCount?.trim()?.toIntOrNull()
-            ?: throw IllegalStateException("Impossible to have non-int count")
+            ?: 0
     }
 
     private fun validateInput(name: String, count: Int): Boolean {
@@ -87,17 +95,9 @@ class ShopItemViewModel : ViewModel() {
             result = false
         }
         if (count <= 0) {
-            _errorInputName.postValue(true)
+            _errorInputCount.postValue(true)
             result = false
         }
         return result
-    }
-
-    private fun resetErrorInputName(){
-        _errorInputName.postValue(false)
-    }
-
-    private fun resetErrorInputCount(){
-        _errorInputCount.postValue(false)
     }
 }
