@@ -2,6 +2,7 @@ package com.sumin.shoppinglist.presentation
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +14,7 @@ import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter
 import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
 import com.sumin.shoppinglist.presentation.adapter.ShopStatus
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -52,6 +53,11 @@ class MainActivity : AppCompatActivity() {
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 
     private fun setupRecyclerView() {

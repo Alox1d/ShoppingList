@@ -18,6 +18,8 @@ import com.sumin.shoppinglist.R
 
 class ShopItemFragment : Fragment() {
 
+    private lateinit var onEditingFinishListener: OnEditingFinishListener
+
     private lateinit var viewModel: ShopItemViewModel
 
     private lateinit var tilName: TextInputLayout
@@ -29,8 +31,16 @@ class ShopItemFragment : Fragment() {
     private var screenMode: String = UNDEFINED_SCREEN_MODE
     private var shopItemId: Int = UNDEFINED_ID
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishListener)
+            onEditingFinishListener = context
+        else
+            throw RuntimeException("Activity must implement OnEditingFinishListener")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("ShopItemFragment", "onCreate")
+        Log.d("ShopItemFragment", "onCreate, to check recreation on rotation")
 
         // НЕ работаем с View здесь, т.к. вызывается ДО onViewCreated, т.е. до создания View
         super.onCreate(savedInstanceState)
@@ -71,9 +81,12 @@ class ShopItemFragment : Fragment() {
             tilCount.error = if (it) getString(R.string.error_input_count) else null
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+            onEditingFinishListener.onEditingFinished()
 
+            // OLD
             // activity nullable, т.к. мы можем к ней обратиться, когда она ещё НЕ ПРИКРЕПЛЕНА к активити
-            activity?.onBackPressed()
+            // activity?.onBackPressed()
+
             // requireActivity() throws IllegalStateException
             // requireActivity().onBackPressed()
         }
@@ -152,6 +165,10 @@ class ShopItemFragment : Fragment() {
         etName = view.findViewById(R.id.et_name)
         etCount = view.findViewById(R.id.et_count)
         buttonSave = view.findViewById(R.id.save_button)
+    }
+
+    fun interface OnEditingFinishListener {
+        fun onEditingFinished()
     }
 
     companion object {

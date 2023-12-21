@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
 import com.sumin.shoppinglist.R
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishListener {
 
     private var screenMode = UNDEFINED_SCREEN_MODE
     private var shopItemId = UNDEFINED_ID
@@ -78,5 +78,9 @@ class ShopItemActivity : AppCompatActivity() {
                 putExtra(EXTRA_SHOT_ITEM_ID, shopItemId)
             }
         }
+    }
+
+    override fun onEditingFinished() {
+        finish()
     }
 }
