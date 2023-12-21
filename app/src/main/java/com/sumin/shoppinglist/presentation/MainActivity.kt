@@ -1,10 +1,9 @@
 package com.sumin.shoppinglist.presentation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,13 +17,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
+    private var shopItemContainer: FragmentContainerView? = null
 
-    // Adding by LinearLayout
+    // Adding by LinearLayout instead of RecyclerView
     // private lateinit var llShopList: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        shopItemContainer = findViewById(R.id.shop_item_container)
 
         // Adding by LinearLayout
         // llShopList = findViewById(R.id.ll_shop_list)
@@ -44,7 +46,11 @@ class MainActivity : AppCompatActivity() {
 
         val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
         buttonAddItem.setOnClickListener {
-            startActivity(ShopItemActivity.newIntentAddItem(this))
+            if (isOnePaneMode()) {
+                startActivity(ShopItemActivity.newIntentAddItem(this))
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
         }
     }
 
@@ -86,11 +92,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClickListener() {
-        shopListAdapter.onShopItemClickListener = {
-            Log.i("TAG", "onShopItemClickListener: $it")
+        shopListAdapter.onShopItemClickListener = { shopItem ->
+            Log.i("TAG", "onShopItemClickListener: $shopItem")
 
-            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
+            if (isOnePaneMode()) {
+                startActivity(ShopItemActivity.newIntentEditItem(this, shopItem.id))
+            } else {
+                launchFragment(ShopItemFragment.newInstanceEditItem(shopItem.id))
+            }
         }
+    }
+
+    private fun isOnePaneMode() = shopItemContainer == null
+
+    private fun launchFragment(shopItemFragment: ShopItemFragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            // We should use replace instead of add, becuase otherwise fragments will be increased with each rotation
+            // .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, shopItemFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupLongClickListener() {
