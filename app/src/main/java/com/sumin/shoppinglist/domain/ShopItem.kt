@@ -8,6 +8,6 @@ data class ShopItem(
     var id: Int = UNDEFINED_ID,
 ) {
     companion object {
-         const val UNDEFINED_ID = -1
+         const val UNDEFINED_ID = 0 // Should be 0 for Room
     }
 }

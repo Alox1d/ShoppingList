@@ -1,14 +1,16 @@
 package com.sumin.shoppinglist.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.sumin.shoppinglist.data.ShopListRepositoryImpl
 import com.sumin.shoppinglist.domain.DeleteShopItemUseCase
 import com.sumin.shoppinglist.domain.EditShopItemUseCase
 import com.sumin.shoppinglist.domain.GetShopListUseCase
 import com.sumin.shoppinglist.domain.ShopItem
 
-class MainViewModel : ViewModel() {
-    private val repository = ShopListRepositoryImpl // Wrong: Presentation KNOWS about DATA LAYER
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository =
+        ShopListRepositoryImpl(application) // Wrong: Presentation KNOWS about DATA LAYER
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)

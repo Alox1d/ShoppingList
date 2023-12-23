@@ -1,17 +1,18 @@
 package com.sumin.shoppinglist.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.sumin.shoppinglist.data.ShopListRepositoryImpl
 import com.sumin.shoppinglist.domain.AddShopItemUseCase
 import com.sumin.shoppinglist.domain.EditShopItemUseCase
 import com.sumin.shoppinglist.domain.GetShopItemUseCase
 import com.sumin.shoppinglist.domain.ShopItem
-import java.lang.IllegalStateException
 
-class ShopItemViewModel : ViewModel() {
-    private val repository = ShopListRepositoryImpl // Wrong: Presentation KNOWS about DATA LAYER
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository =
+        ShopListRepositoryImpl(application) // Wrong: Presentation KNOWS about DATA LAYER
 
     private val getShopItemUseCase =
         GetShopItemUseCase(repository) // to get ShopItem on edit screen
