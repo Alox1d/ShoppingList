@@ -1,25 +1,26 @@
 package com.sumin.shoppinglist.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.shoppinglist.data.ShopListRepositoryImpl
 import com.sumin.shoppinglist.domain.AddShopItemUseCase
 import com.sumin.shoppinglist.domain.EditShopItemUseCase
 import com.sumin.shoppinglist.domain.GetShopItemUseCase
 import com.sumin.shoppinglist.domain.ShopItem
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository =
-        ShopListRepositoryImpl(application) // Wrong: Presentation KNOWS about DATA LAYER
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUseCase: GetShopItemUseCase, // to get ShopItem on edit screen
+    private val addShopListUseCase: AddShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase
+) : ViewModel() {
 
-    private val getShopItemUseCase =
-        GetShopItemUseCase(repository) // to get ShopItem on edit screen
-    private val addShopListUseCase = AddShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
+    // Wrong: Presentation KNOWS about DATA LAYER
+    // Used without Dagger2
+    // private val repository =
+    // ShopListRepositoryImpl(application)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
