@@ -2,11 +2,13 @@ package com.sumin.shoppinglist.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.sumin.shoppinglist.data.ShopListRepositoryImpl
 import com.sumin.shoppinglist.domain.DeleteShopItemUseCase
 import com.sumin.shoppinglist.domain.EditShopItemUseCase
 import com.sumin.shoppinglist.domain.GetShopListUseCase
 import com.sumin.shoppinglist.domain.ShopItem
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository =
@@ -19,15 +21,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        editShopItemUseCase.editShopItem(
-            shopItem = shopItem.copy(
-                enabled = !shopItem.enabled
+        viewModelScope.launch {
+            editShopItemUseCase.editShopItem(
+                shopItem = shopItem.copy(
+                    enabled = !shopItem.enabled
+                )
             )
-        )
+        }
     }
 
     //    fun getShopList() {
