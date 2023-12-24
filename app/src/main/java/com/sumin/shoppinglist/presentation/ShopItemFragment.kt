@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.sumin.shoppinglist.databinding.FragmentShopItemBinding
 import javax.inject.Inject
 
@@ -20,10 +20,9 @@ class ShopItemFragment : Fragment() {
     private val component by lazy {
         (requireActivity().application as ShopApp).component
     }
+    private val viewModel: ShopItemViewModel by viewModels { viewModelFactory }
 
     private lateinit var onEditingFinishListener: OnEditingFinishedListener
-
-    private lateinit var viewModel: ShopItemViewModel
 
     private var _binding: FragmentShopItemBinding? = null
     private val binding: FragmentShopItemBinding
@@ -63,7 +62,6 @@ class ShopItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViewModel()
         initDataBinding()
         addTextChangeListeners()
         launchRightMode()
@@ -165,10 +163,6 @@ class ShopItemFragment : Fragment() {
                 UNDEFINED_ID
             )
         }
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
     }
 
     fun interface OnEditingFinishedListener {

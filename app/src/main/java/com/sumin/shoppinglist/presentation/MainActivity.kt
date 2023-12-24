@@ -3,8 +3,8 @@ package com.sumin.shoppinglist.presentation
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sumin.shoppinglist.R
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         (application as ShopApp).component
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels { viewModelFactory }
     private lateinit var shopListAdapter: ShopListAdapter
     private lateinit var binding: ActivityMainBinding
 
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         // llShopList = findViewById(R.id.ll_shop_list)
         setupRecyclerView()
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        // Old viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
         //Same: viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         viewModel.shopList.observe(this) {
