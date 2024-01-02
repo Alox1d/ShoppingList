@@ -1,5 +1,6 @@
 package com.sumin.shoppinglist.data
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,6 +13,10 @@ interface ShopListDao {
     // Returns LiveData, means method will be executed on another thread -> don't need suspend
     @Query("SELECT * FROM shop_items")
     fun getShopList(): LiveData<List<ShopItemDbModel>>
+
+    // Room will generate all necessary implementation
+    @Query("SELECT * FROM shop_items")
+    fun getShopListCursor(): Cursor
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addShopItem(shopItemDbModel: ShopItemDbModel)

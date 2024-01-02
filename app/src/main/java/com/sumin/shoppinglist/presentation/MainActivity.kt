@@ -1,5 +1,6 @@
 package com.sumin.shoppinglist.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sumin.shoppinglist.R
 import com.sumin.shoppinglist.databinding.ActivityMainBinding
+import com.sumin.shoppinglist.domain.ShopItem
 import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter
 import com.sumin.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
 import com.sumin.shoppinglist.presentation.adapter.ShopStatus
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
@@ -59,6 +62,29 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
             } else {
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
+        }
+        getShopItemsByContentResolver()
+    }
+
+    private fun getShopItemsByContentResolver() {
+        thread {
+            val cursor = contentResolver.query(
+                Uri.parse("content://com.sumin.shoppinglist/shop_items"),
+                null,
+                null,
+                null,
+                null,
+                null,
+            )
+            while (cursor?.moveToNext() == true) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val count = cursor.getInt(cursor.getColumnIndexOrThrow("count"))
+                val enabled = cursor.getInt(cursor.getColumnIndexOrThrow("enabled")) > 0
+                val shopItem = ShopItem(name = name, count = count, enabled = enabled, id = id)
+                Log.d("MainActivity", shopItem.toString())
+            }
+            cursor?.close()
         }
     }
 
