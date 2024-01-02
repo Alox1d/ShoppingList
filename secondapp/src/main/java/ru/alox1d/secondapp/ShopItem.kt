@@ -1,0 +1,13 @@
+package ru.alox1d.secondapp
+
+
+data class ShopItem(
+    val name: String,
+    val count: Int,
+    val enabled: Boolean,
+    var id: Int = UNDEFINED_ID,
+) {
+    companion object {
+        const val UNDEFINED_ID = 0 // Should be 0 for Room
+    }
+}
