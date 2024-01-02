@@ -91,7 +91,19 @@ class ShopListProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?
     ): Int {
-        TODO("Not yet implemented")
+        when (uriMatcher.match(uri)) {
+            GET_SHOP_ITEMS_QUERY -> {
+                if (values == null) return 0
+                val id = values.getAsInteger("id")
+                val name = values.getAsString("name")
+                val count = values.getAsInteger("count")
+                val enabled = values.getAsBoolean("enabled")
+                val shopItem = ShopItem(name = name, count = count, enabled = enabled, id = id)
+
+                shopListDao.addShopItemSync(mapper.mapDomainToDbModel(shopItem))
+            }
+        }
+        return 0
     }
 
     companion object {

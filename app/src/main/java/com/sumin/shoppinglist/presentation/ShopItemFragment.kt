@@ -151,15 +151,32 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun launchEditMode() {
-        viewModel.getShopItem(shopItemId)
-        binding.saveButton.setOnClickListener {
-            viewModel.editShowItem(binding.etName.text.toString(), binding.etCount.text.toString())
-        }
         // Observe Without DataBinding
         // viewModel.currentShopItem.observe(viewLifecycleOwner) {
         //     binding.etName.setText(it.name)
         //     binding.etCount.setText(it.count.toString())
         // }
+
+        // Update by ViewModel
+        // viewModel.getShopItem(shopItemId)
+        // binding.saveButton.setOnClickListener {
+        //     viewModel.editShowItem(binding.etName.text.toString(), binding.etCount.text.toString())
+        // }
+
+        // Update by Content Provider
+        binding.saveButton.setOnClickListener {
+            thread {
+                context?.contentResolver?.update(
+                    Uri.parse("content://com.sumin.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put("id", shopItemId)
+                        put("name", binding.etName.text.toString())
+                        put("count", binding.etCount.text.toString().toInt())
+                        put("enabled", true)
+                    }, null, null
+                )
+            }
+        }
     }
 
     private fun parseParams() {
