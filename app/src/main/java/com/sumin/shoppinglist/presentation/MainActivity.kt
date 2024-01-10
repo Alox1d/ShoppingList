@@ -24,17 +24,16 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
     private val viewModel: MainViewModel by viewModels { viewModelFactory }
     private lateinit var shopListAdapter: ShopListAdapter
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     // Adding by LinearLayout instead of RecyclerView
     // private lateinit var llShopList: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         component.inject(this)
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         // Adding by LinearLayout
